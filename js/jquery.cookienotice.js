@@ -1,15 +1,15 @@
 // jQuery Cookie Notice plugin
-// © Bite CP 2012
+// ï¿½ Bite CP 2012
 
 (function($){
 
 	var methods = {
-		
+
 		init: function(options){
-		
+
 			return this.each(function() {
-			
-				var $this = $(this);					
+
+				var $this = $(this);
 				var defaults = {
 					cookieName: "cookie-notice",
 					content: $("<p>We use cookies to give you the best possible online experience. If you continue browsing, we'll assume you are happy for your web browser to receive all cookies from our website.</p>"),
@@ -19,7 +19,7 @@
 					overlay: true
 				}
 				var opts = $.extend(defaults, options);
-				
+
 				if(!$this.data('cookieNotice')){
 					// Assign to data
 					$this.data('cookieNotice', {
@@ -28,58 +28,58 @@
 					});
 				}
 				var data  = $this.data('cookieNotice');
-				
+
 				var showNotice = methods.getCookie(data.opts.cookieName);
-				
+
 				if(showNotice !== "false"){
 					methods.showNotice.call($this);
-				}		    
-		   
+				}
+
 	    });
-		
+
 		},
-		
+
 		showNotice: function(){
-		
-			var $this = this;	
-			
+
+			var $this = this;
+
 			var data  = $this.data('cookieNotice');
-			
+
 			if(data.notice == undefined){
 				// Generate notice
 				data.notice = $("<div />", {
-					class: "cookie-notice",
+					"class": "cookie-notice",
 					html: $("<div />", {
-						class: "cookie-notice-inner",
+						"class": "cookie-notice-inner",
 						html: data.opts.content
 					})
 				});
-				
+
 				var closeNotice = $("<a />", {
-					class: "close-notice",
+					"class": "close-notice",
 					href: "#",
 					text: "Close notice"
 				});
-				
-				closeNotice.bind("click.cookieNotice", function(event){ 
+
+				closeNotice.bind("click.cookieNotice", function(event){
 					event.preventDefault();
-					methods.closeNotice.call($this); 
+					methods.closeNotice.call($this);
 				});
-				
+
 				closeNotice.appendTo(data.notice.children(".cookie-notice-inner"));
-				
+
 				data.notice.hide().appendTo($this);
 			}
-			
+
 			var noticeHeight = data.notice.outerHeight(true);
-			
+
 			data.notice.css(data.opts.position, -noticeHeight).show();
-			
+
 			setTimeout(function(){
 				var animation = {};
 				animation[data.opts.position] = 0;
 				data.notice.animate(animation, data.opts.transition);
-				
+
 				// Animate body margin at same time if notice isn't an overlay
 				if(!data.opts.overlay){
 					var existing_margin = parseInt($this.css("margin-"+data.opts.position).replace('px', ''), 10);
@@ -88,22 +88,22 @@
 					animation['margin-'+data.opts.position] = existing_margin + data.notice.outerHeight(true);
 					$this.animate(animation, data.opts.transition);
 				}
-			},data.opts.delay);	
-			
+			},data.opts.delay);
+
 			$this.data('cookieNotice', data);
-			
+
 		},
-		
+
 		closeNotice: function(){
-			
-			var $this = this;	
-			
+
+			var $this = this;
+
 			var data  = $this.data('cookieNotice');
-			
+
 			var animation = {};
 			animation[data.opts.position] = -data.notice.outerHeight(true);
 			data.notice.animate(animation, data.opts.transition);
-			
+
 			// Animate body margin at same time if notice isn't an overlay
 			if(!data.opts.overlay){
 				var existing_margin = parseInt($this.css("margin-"+data.opts.position).replace('px', ''), 10);
@@ -112,11 +112,11 @@
 				animation['margin-'+data.opts.position] = existing_margin - data.notice.outerHeight(true);
 				$this.animate(animation, data.opts.transition);
 			}
-			
+
 			methods.setCookie(data.opts.cookieName, false, 365, "/");
-			
+
 		},
-		
+
 		getCookie: function(check_name ) {
 			// first we'll split this cookie up into name/value pairs
 			// note: document.cookie only returns name=value, not the other components
@@ -125,14 +125,14 @@
 			var cookie_name = '';
 			var cookie_value = '';
 			var b_cookie_found = false; // set boolean t/f default f
-		
+
 			for ( i = 0; i < a_all_cookies.length; i++ ){
 				// now we'll split apart each name=value pair
-				a_temp_cookie = a_all_cookies[i].split( '=' );		
-		
+				a_temp_cookie = a_all_cookies[i].split( '=' );
+
 				// and trim left/right whitespace while we're at it
 				cookie_name = a_temp_cookie[0].replace(/^\s+|\s+$/g, '');
-		
+
 				// if the extracted name matches passed check_name
 				if ( cookie_name == check_name ){
 					b_cookie_found = true;
@@ -151,28 +151,28 @@
 				return null;
 			}
 		},
-		
+
 		setCookie: function(name, value, expires, path, domain, secure){
 			var today = new Date();
 			today.setTime( today.getTime() );
-			
+
 			if (expires){
 				// Expires is provided in days
-				expires = expires * 1000 * 60 * 60 * 24; 
+				expires = expires * 1000 * 60 * 60 * 24;
 			}
 			var expires_date = new Date( today.getTime() + (expires) );
-			
+
 			document.cookie = name + "=" +escape( value ) +
 			( ( expires ) ? ";expires=" + expires_date.toGMTString() : "" ) +
 			( ( path ) ? ";path=" + path : "" ) +
 			( ( domain ) ? ";domain=" + domain : "" ) +
 			( ( secure ) ? ";secure" : "" );
 		}
-		
+
 	};
 
   $.fn.cookieNotice = function(method) {
-  
+
   	// Method calling logic
     if(methods[method]) {
       return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
